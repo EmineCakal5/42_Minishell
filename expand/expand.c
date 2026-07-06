@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	have_expand(t_token *t)
+void	have_expand(t_token *t, char **envp)
 {
 	t_token	*temp;
 	char	*new_value;
@@ -19,7 +19,7 @@ void	have_expand(t_token *t)
 			temp = temp->next;
 			continue ;
 		}
-		new_value = expand_value(temp->value);
+		new_value = expand_value(temp->value, envp);
 		if (new_value)
 		{
 			free(temp->value);

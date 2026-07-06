@@ -1,13 +1,23 @@
 #include "../minishell.h"
 
+static int	str_equal(char *left, char *right)
+{
+	int	i;
+
+	i = 0;
+	while (left[i] && right[i] && left[i] == right[i])
+		i++;
+	return (left[i] == right[i]);
+}
+
 int is_builtin(char *cmd)
 {
     if (!cmd)
         return (0);
-    if (strcmp(cmd, "pwd") == 0 || strcmp(cmd, "echo") == 0 ||
-        strcmp(cmd, "cd") == 0 || strcmp(cmd, "env") == 0 ||
-        strcmp(cmd, "export") == 0 || strcmp(cmd, "unset") == 0 ||
-        strcmp(cmd, "exit") == 0 )
+    if (str_equal(cmd, "pwd") || str_equal(cmd, "echo") ||
+        str_equal(cmd, "cd") || str_equal(cmd, "env") ||
+        str_equal(cmd, "export") || str_equal(cmd, "unset") ||
+        str_equal(cmd, "exit"))
         return (1);
     return (0);
 }
@@ -16,19 +26,19 @@ int run_builtin(t_cmd *cmd, char ***envp)
 {
     (void)envp;
 
-    if (strcmp(cmd->args[0], "pwd") == 0)
+    if (str_equal(cmd->args[0], "pwd"))
         return (ft_pwd());
-    if (strcmp(cmd->args[0], "env") == 0)
+    if (str_equal(cmd->args[0], "env"))
         return (ft_env(*envp));
-    if (strcmp(cmd->args[0], "exit") == 0)
+    if (str_equal(cmd->args[0], "exit"))
         return (ft_exit(cmd));
-    if (strcmp(cmd->args[0], "export") == 0)
+    if (str_equal(cmd->args[0], "export"))
         return (ft_export(cmd, envp));
-    if (strcmp(cmd->args[0], "unset") == 0)
+    if (str_equal(cmd->args[0], "unset"))
         return (ft_unset(cmd, envp));
-    if (strcmp(cmd->args[0], "echo") == 0)
+    if (str_equal(cmd->args[0], "echo"))
         return (ft_echo(cmd));
-    if (strcmp(cmd->args[0], "cd") == 0)
+    if (str_equal(cmd->args[0], "cd"))
         return (ft_cd(cmd, envp));
     return (0);
 }

@@ -1,5 +1,25 @@
 #include "../minishell.h"
 
+static char	*shell_getenv(char **envp, char *name)
+{
+    int		i;
+    int		j;
+
+    if (!envp || !name)
+        return (NULL);
+    i = 0;
+    while (envp[i])
+    {
+        j = 0;
+        while (envp[i][j] && name[j] && envp[i][j] == name[j])
+            j++;
+        if (name[j] == '\0' && envp[i][j] == '=')
+            return (envp[i] + j + 1);
+        i++;
+    }
+    return (NULL);
+}
+
 static void update_pwd_env(char ***envp, char *new_path)
 {
     int i;
@@ -31,7 +51,7 @@ int ft_cd(t_cmd *cmd, char ***envp)
 
     if (!path)
     {
-        path = getenv("HOME");
+        path = shell_getenv(*envp, "HOME");
         if (!path)
             return (0);
     }

@@ -1,6 +1,68 @@
 #include "../minishell.h"
 #include "executor.h"
 
+static int	status_to_code(int status)
+{
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
+}
+
+static int	save_std_fds(int std_fds[2])
+{
+	std_fds[0] = dup(STDIN_FILENO);
+	std_fds[1] = dup(STDOUT_FILENO);
+	if (std_fds[0] < 0 || std_fds[1] < 0)
+	{
+		if (std_fds[0] >= 0)
+			close(std_fds[0]);
+		if (std_fds[1] >= 0)
+			close(std_fds[1]);
+		return (-1);
+	}
+	return (0);
+}
+
+static void	restore_std_fds(int std_fds[2])
+{
+	if (std_fds[0] >= 0)
+	{
+		dup2(std_fds[0], STDIN_FILENO);
+		close(std_fds[0]);
+	}
+	if (std_fds[1] >= 0)
+	{
+		dup2(std_fds[1], STDOUT_FILENO);
+		close(std_fds[1]);
+	}
+}
+
+static int	run_builtin_with_redirs(t_cmd *cmd, char ***envp)
+{
+	int	std_fds[2];
+	int	status;
+
+	std_fds[0] = -1;
+	std_fds[1] = -1;
+	if (cmd->redirs)
+	{
+		if (save_std_fds(std_fds) == -1)
+			return (1);
+		if (apply_redirections(cmd->redirs) == -1)
+		{
+			restore_std_fds(std_fds);
+			return (1);
+		}
+	}
+	status = run_builtin(cmd, envp);
+	fflush(NULL);
+	if (cmd->redirs)
+		restore_std_fds(std_fds);
+	return (status);
+}
+
 static void	free_path_list(char **paths)
 {
 	int	i;
@@ -170,19 +232,19 @@ char	*find_cmd_path(char *cmd, char **envp)
 	return (cmd_path);
 }
 
-int	exec_cmd(t_cmd *cmd, char **envp)
+int exec_cmd(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
 	char	*cmd_path;
 	int		status;
 
-	if (is_builtin(cmd->args[0]))
-	{
-		return (run_builtin(cmd, &envp));
-	}
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
-	cmd_path = find_cmd_path(cmd->args[0], envp);
+	if (is_builtin(cmd->args[0]))
+	{
+		return (run_builtin_with_redirs(cmd, envp));
+	}
+	cmd_path = find_cmd_path(cmd->args[0], *envp);
 	if (!cmd_path)
 	{
 		printf("%s: command not found\n", cmd->args[0]);
@@ -197,19 +259,20 @@ int	exec_cmd(t_cmd *cmd, char **envp)
 	}
 	if (pid == 0)
 	{
-		setup_signals_child();//sinyalleri varsayılana döndürür
-
+		setup_signals_child();
 		if (apply_redirections(cmd->redirs) == -1)
 			exit(1);
 
-		execve(cmd_path, cmd->args, envp);
+		execve(cmd_path, cmd->args, *envp);
 		perror("execve");
 		free(cmd_path);
 		exit(126);
 	}
-	waitpid(pid, &status, 0);
+	if (waitpid(pid, &status, 0) == -1)
+	{
+		free(cmd_path);
+		return (1);
+	}
 	free(cmd_path);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (1);
+	return (status_to_code(status));
 }
