@@ -2,7 +2,8 @@
 
 int	is_redirection(int type)
 {
-	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND || type == HEREDOC);
+	return (type == REDIR_IN || type == REDIR_OUT 
+		|| type == APPEND || type == HEREDOC);
 }
 
 int	check_parser(t_token *t)

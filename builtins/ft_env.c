@@ -8,16 +8,16 @@
 
 int ft_env(char **envp)
 {
-    int i;
+	int i;
 
-    i = 0;
-    if (!envp)
-        return (0);
-    //envp bir dizidir null görene kadar döner
-    while (envp[i])
-    {
-        printf("%s\n", envp[i]);
-        i++;
-    }
-    return (0);
+	i = 0;
+	if (!envp)
+		return (0);
+	//envp bir dizidir null görene kadar döner
+	while (envp[i])
+	{
+		printf("%s\n", envp[i]);
+		i++;
+	}
+	return (0);
 }

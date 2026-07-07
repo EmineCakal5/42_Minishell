@@ -34,7 +34,7 @@ void	add_token(t_token **head, t_token *new)
 	new->next = NULL;
 }
 
-static int	word_quote_state(char *value)
+int	word_quote_state(char *value)
 {
 	int	i;
 	int	quote;
@@ -87,11 +87,8 @@ char	*read_word(char *s, int *i)
 t_token	*tokenize(char *s)
 {
 	t_token	*head;
-	t_token	*tok;
-	char	*new;
 	int		i;
-	int		len;
-	t_type	type;
+	int		fail;
 
 	head = NULL;
 	i = 0;
@@ -102,48 +99,13 @@ t_token	*tokenize(char *s)
 		if (!s[i])
 			break ;
 		if (pipe_control(s, i) || double_token(s, i) || after_token(s, i))
-		{
-			free_tokens(head);
-			return (NULL);
-		}
+			return (free_tokens(head), NULL);
 		if (op(s[i]))
-		{
-			len = op_number(s, i);
-			type = op_type(s, i);
-			new = ft_substr(s, i, len);
-			if (!new)
-			{
-				free_tokens(head);
-				return (NULL);
-			}
-			tok = new_token(type, new);
-			if (!tok)
-			{
-				free(new);
-				free_tokens(head);
-				return (NULL);
-			}
-			add_token(&head, tok);
-			i += len;
-		}
+			fail = handle_op_token(s, &i, &head);
 		else
-		{
-			new = read_word(s, &i);
-			if (!new)
-			{
-				free_tokens(head);
-				return (NULL);
-			}
-			tok = new_token(WORD, new);
-			if (!tok)
-			{
-				free(new);
-				free_tokens(head);
-				return (NULL);
-			}
-			tok->quoted = word_quote_state(new);
-			add_token(&head, tok);
-		}
+			fail = handle_word_token(s, &i, &head);
+		if (fail)
+			return (free_tokens(head), NULL);
 	}
 	return (head);
 }

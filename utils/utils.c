@@ -1,5 +1,15 @@
 #include "../minishell.h"
 
+static char	*empty_substr(void)
+{
+	char	*substr;
+
+	substr = malloc(1);
+	if (substr)
+		substr[0] = '\0';
+	return (substr);
+}
+
 char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char	*substr;
@@ -10,12 +20,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 		return (NULL);
 	s_len = strlen(s);
 	if (start >= s_len)
-	{
-		substr = malloc(1);
-		if (substr)
-			substr[0] = '\0';
-		return (substr);
-	}
+		return (empty_substr());
 	if (start + len > s_len)
 		len = s_len - start;
 	substr = malloc(len + 1);
@@ -30,10 +35,11 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	substr[i] = '\0';
 	return (substr);
 }
-int ft_atoi(const char *str)
+
+int	ft_atoi(const char *str)
 {
-	int i;
-	int res;
+	int	i;
+	int	res;
 
 	i = 0;
 	res = 0;

@@ -53,6 +53,8 @@ static int	run_builtin_with_redirs(t_cmd *cmd, char ***envp)
 		if (apply_redirections(cmd->redirs) == -1)
 		{
 			restore_std_fds(std_fds);
+			if (g_exit_status == 130)
+				return (130);
 			return (1);
 		}
 	}
@@ -235,6 +237,7 @@ char	*find_cmd_path(char *cmd, char **envp)
 int exec_cmd(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
+	pid_t	old_pgrp;
 	char	*cmd_path;
 	int		status;
 
@@ -250,6 +253,7 @@ int exec_cmd(t_cmd *cmd, char ***envp)
 		printf("%s: command not found\n", cmd->args[0]);
 		return (127);
 	}
+	old_pgrp = get_terminal_pgrp();
 	pid = fork();
 	if (pid < 0)
 	{
@@ -259,20 +263,30 @@ int exec_cmd(t_cmd *cmd, char ***envp)
 	}
 	if (pid == 0)
 	{
+		setpgid(0, 0);
 		setup_signals_child();
 		if (apply_redirections(cmd->redirs) == -1)
+		{
+			if (g_exit_status == 130)
+				exit(130);
 			exit(1);
-
+		}
 		execve(cmd_path, cmd->args, *envp);
 		perror("execve");
 		free(cmd_path);
 		exit(126);
 	}
+	/* Komutu kendi process group'una tasiyip terminali ona devrediyoruz,
+	   boylece Ctrl+C sadece o gruba gider, shell'in kendisi etkilenmez. */
+	setpgid(pid, pid);
+	set_terminal_pgrp(pid);
 	if (waitpid(pid, &status, 0) == -1)
 	{
+		set_terminal_pgrp(old_pgrp);
 		free(cmd_path);
 		return (1);
 	}
+	set_terminal_pgrp(old_pgrp);
 	free(cmd_path);
 	return (status_to_code(status));
 }

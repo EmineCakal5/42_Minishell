@@ -2,107 +2,151 @@
 
 static int	key_len(char *arg)
 {
-    int	i;
+	int	i;
 
-    i = 0;
-    while (arg[i] && arg[i] != '=')
-        i++;
-    return (i);
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+		i++;
+	return (i);
 }
 
 static int	key_match(char *env, char *arg)
 {
-    int	i;
-    int	len;
+	int	i;
+	int	len;
 
-    i = 0;
-    len = key_len(arg);
-    while (i < len && env[i] && env[i] == arg[i])
-        i++;
-    return (i == len && env[i] == '=');
+	i = 0;
+	len = key_len(arg);
+	while (i < len && env[i] && env[i] == arg[i])
+		i++;
+	return (i == len && env[i] == '=');
 }
 
 static int	env_count(char **envp)
 {
-    int	count;
+	int	count;
 
-    count = 0;
-    if (!envp)
-        return (0);
-    while (envp[count])
-        count++;
-    return (count);
+	count = 0;
+	if (!envp)
+		return (0);
+	while (envp[count])
+		count++;
+	return (count);
 }
 
 static char	*shell_strdup(char *s)
 {
-    char	*dup;
-    int		i;
+	char	*dup;
+	int		i;
 
-    i = 0;
-    while (s[i])
-        i++;
-    dup = malloc(i + 1);
-    if (!dup)
-        return (NULL);
-    i = 0;
-    while (s[i])
-    {
-        dup[i] = s[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return (dup);
+	i = 0;
+	while (s[i])
+		i++;
+	dup = malloc(i + 1);
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }
-/*Burada char ***envp kullanmamızın sebebi; 
-değişken eklediğimizde envp dizisinin bellekteki yerinin
- değişebilmesidir (realloc). Eğer sadece char envp gönderseydik,
-  ana main fonksiyonundaki diziyi güncelleyemezdik.*/
+
+static char	*build_entry(char *arg)
+{
+	int		len;
+	int		has_eq;
+	char	*entry;
+	int		i;
+
+	len = key_len(arg);
+	has_eq = (arg[len] == '=');
+	if (has_eq)
+		return (shell_strdup(arg));
+	entry = malloc(len + 2);
+	if (!entry)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		entry[i] = arg[i];
+		i++;
+	}
+	entry[len] = '=';
+	entry[len + 1] = '\0';
+	return (entry);
+}
+
+static int	add_new_entry(char ***envp, char *new_entry)
+{
+	char	**new_env;
+	int		i;
+	int		count;
+
+	count = env_count(*envp);
+	new_env = malloc(sizeof(char *) * (count + 2));
+	if (!new_env)
+	{
+		free(new_entry);
+		return (1);
+	}
+	i = 0;
+	while (i < count)
+	{
+		new_env[i] = (*envp)[i];
+		i++;
+	}
+	new_env[i] = new_entry;
+	new_env[i + 1] = NULL;
+	free(*envp);
+	*envp = new_env;
+	return (0);
+}
+
+static int	export_one(char ***envp, char *arg)
+{
+	char	*new_entry;
+	int		i;
+
+	new_entry = build_entry(arg);
+	if (!new_entry)
+		return (1);
+	i = 0;
+	while ((*envp)[i])
+	{
+		if (key_match((*envp)[i], arg))
+		{
+			free((*envp)[i]);
+			(*envp)[i] = new_entry;
+			return (0);
+		}
+		i++;
+	}
+	return (add_new_entry(envp, new_entry));
+}
+
 int ft_export(t_cmd *cmd, char ***envp)
 {
-    char **new_env;
-    char *new_entry;
-    int i ;
-    int count;
+	int	i;
+	int	ret;
 
-    i = 0;
-    if (!envp || !*envp)
-        return (0);
-    if (!cmd->args[1])
-    {
-        //eğer argüman yoksa sadece mevcut envpyi listele(env ile aynı)
-        ft_env(*envp);
-        return (0);
-    }
-    new_entry = shell_strdup(cmd->args[1]);
-    if (!new_entry)
-        return (1);
-    while ((*envp)[i])
-    {
-        if (key_match((*envp)[i], cmd->args[1]))
-        {
-            free((*envp)[i]);
-            (*envp)[i] = new_entry;
-            return (0);
-        }
-        i++;
-    }
-    count = env_count(*envp);
-    new_env = malloc(sizeof(char *) * (count + 2));
-    if (!new_env)
-    {
-        free(new_entry);
-        return (1);
-    }
-    i = 0;
-    while (i < count)
-    {
-        new_env[i] = (*envp)[i];
-        i++;
-    }
-    new_env[i] = new_entry;
-    new_env[i + 1] = NULL;
-    free(*envp);
-    *envp = new_env;
-    return (0);
+	i = 1;
+	ret = 0;
+	if (!envp || !*envp)
+		return (0);
+	if (!cmd->args[1])
+	{
+		ft_env(*envp);
+		return (0);
+	}
+	while (cmd->args[i])
+	{
+		if (export_one(envp, cmd->args[i]) != 0)
+			ret = 1;
+		i++;
+	}
+	return (ret);
 }

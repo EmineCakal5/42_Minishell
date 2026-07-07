@@ -5,6 +5,23 @@ int	is_op(t_type type)
 	return (type == PIPE || type == REDIR_IN || type == REDIR_OUT || type == APPEND || type == HEREDOC);
 }
 
+static t_node	*check_pipe_children(t_node *node)
+{
+	if (!node->left)
+	{
+		free_ast(node->right);
+		free(node);
+		return (NULL);
+	}
+	if (!node->right)
+	{
+		free_ast(node->left);
+		free(node);
+		return (NULL);
+	}
+	return (node);
+}
+
 static t_node	*parse_rec(t_token *t)
 {
 	t_token	*right;
@@ -24,19 +41,7 @@ static t_node	*parse_rec(t_token *t)
 	node->cmd = NULL;
 	node->left = parse_rec(t);
 	node->right = parse_rec(right);
-	if (!node->left)
-	{
-		free_ast(node->right);
-		free(node);
-		return (NULL);
-	}
-	if (!node->right)
-	{
-		free_ast(node->left);
-		free(node);
-		return (NULL);
-	}
-	return (node);
+	return (check_pipe_children(node));
 }
 
 t_node	*parse(t_token *t)
@@ -71,15 +76,11 @@ static int	add_arg(t_cmd *cmd, t_token *t, int *i)
 	return (0);
 }
 
-t_node	*create_node_cmd(t_token *t)
+static t_node	*init_cmd_node(t_cmd **cmd_out, t_token *start)
 {
 	t_node	*node;
 	t_cmd	*cmd;
-	t_token	*start;
-	int		count;
-	int		i;
 
-	start = t;
 	node = malloc(sizeof(t_node));
 	if (!node)
 	{
@@ -97,23 +98,27 @@ t_node	*create_node_cmd(t_token *t)
 		free_tokens(start);
 		return (NULL);
 	}
-	count = argc_counter(t);
-	cmd->args = calloc(count + 1, sizeof(char *));
-	if (!cmd->args)
-		return (cmd_fail(node, cmd, start));
+	*cmd_out = cmd;
+	return (node);
+}
+
+static int	fill_cmd_args(t_cmd *cmd, t_token *t)
+{
+	int	i;
+
 	i = 0;
 	while (t && t->type != PIPE)
 	{
 		if (t->type == WORD)
 		{
 			if (add_arg(cmd, t, &i))
-				return (cmd_fail(node, cmd, start));
+				return (1);
 			t = t->next;
 		}
 		else if (is_redirection(t->type))
 		{
 			if (save_redirection(cmd, t))
-				return (cmd_fail(node, cmd, start));
+				return (1);
 			t = t->next;
 			if (t)
 				t = t->next;
@@ -121,8 +126,27 @@ t_node	*create_node_cmd(t_token *t)
 		else
 			t = t->next;
 	}
+	return (0);
+}
+
+t_node	*create_node_cmd(t_token *t)
+{
+	t_node	*node;
+	t_cmd	*cmd;
+	t_token	*start;
+	int		count;
+
+	start = t;
+	node = init_cmd_node(&cmd, start);
+	if (!node)
+		return (NULL);
+	count = argc_counter(t);
+	cmd->args = calloc(count + 1, sizeof(char *));
+	if (!cmd->args)
+		return (cmd_fail(node, cmd, start));
+	if (fill_cmd_args(cmd, t))
+		return (cmd_fail(node, cmd, start));
 	node->cmd = cmd;
-	/* AST kendi kopyalarını tuttuğu için bu segment artık geçici veridir. */
 	free_tokens(start);
 	return (node);
 }
@@ -143,14 +167,36 @@ static void	print_redirs(t_redir *redir)
 	}
 }
 
+static void	print_cmd_node(t_node *node)
+{
+	int	i;
+
+	printf("CMD: ");
+	if (node->cmd->args)
+	{
+		i = 0;
+		while (node->cmd->args[i])
+		{
+			printf("%s ", node->cmd->args[i]);
+			i++;
+		}
+	}
+	print_redirs(node->cmd->redirs);
+	printf("\n");
+}
+
 void	print_ast(t_node *node, int depth)
 {
 	int	i;
 
 	if (!node)
 		return ;
-	for (i = 0; i < depth; i++)
+	i = 0;
+	while (i < depth)
+	{
 		printf("  ");
+		i++;
+	}
 	if (node->type == LEAF_PIPE)
 	{
 		printf("PIPE\n");
@@ -158,18 +204,5 @@ void	print_ast(t_node *node, int depth)
 		print_ast(node->right, depth + 1);
 	}
 	else if (node->type == LEAD_CMD && node->cmd)
-	{
-		printf("CMD: ");
-		if (node->cmd->args)
-		{
-			i = 0;
-			while (node->cmd->args[i])
-			{
-				printf("%s ", node->cmd->args[i]);
-				i++;
-			}
-		}
-		print_redirs(node->cmd->redirs);
-		printf("\n");
-	}
+		print_cmd_node(node);
 }

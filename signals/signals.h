@@ -1,6 +1,9 @@
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
+# include <signal.h>
+# include <sys/types.h>
+
 /*
 ** signals/signals.c            (YAZILACAK)
 **
@@ -24,6 +27,9 @@ reset_signals(): Heredoc okuma moduna geçerken (Özel davranış).
 */
 void	setup_signals(void);
 void	setup_signals_child(void);
-void	reset_signals(void);
+void	reset_signals(struct sigaction *old_int);
+void	restore_signals(struct sigaction *old_int);
+pid_t	get_terminal_pgrp(void);
+void	set_terminal_pgrp(pid_t pgrp);
 
 #endif

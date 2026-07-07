@@ -7,7 +7,6 @@ static t_redir	*redir_tail(t_redir *head)
 	return (head);
 }
 
-/* Redirection kaydını tek parça halinde oluşturuyoruz. */
 t_redir	*new_redir(t_type type, char *target)
 {
 	t_redir	*redir;
