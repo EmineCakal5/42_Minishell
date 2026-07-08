@@ -1,92 +1,12 @@
 #include "../minishell.h"
 
-static int	key_len(char *arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i] && arg[i] != '=')
-		i++;
-	return (i);
-}
-
-static int	key_match(char *env, char *arg)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = key_len(arg);
-	while (i < len && env[i] && env[i] == arg[i])
-		i++;
-	return (i == len && env[i] == '=');
-}
-
-static int	env_count(char **envp)
-{
-	int	count;
-
-	count = 0;
-	if (!envp)
-		return (0);
-	while (envp[count])
-		count++;
-	return (count);
-}
-
-static char	*shell_strdup(char *s)
-{
-	char	*dup;
-	int		i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	dup = malloc(i + 1);
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
-
-static char	*build_entry(char *arg)
-{
-	int		len;
-	int		has_eq;
-	char	*entry;
-	int		i;
-
-	len = key_len(arg);
-	has_eq = (arg[len] == '=');
-	if (has_eq)
-		return (shell_strdup(arg));
-	entry = malloc(len + 2);
-	if (!entry)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		entry[i] = arg[i];
-		i++;
-	}
-	entry[len] = '=';
-	entry[len + 1] = '\0';
-	return (entry);
-}
-
 static int	add_new_entry(char ***envp, char *new_entry)
 {
 	char	**new_env;
 	int		i;
 	int		count;
 
-	count = env_count(*envp);
+	count = export_env_count(*envp);
 	new_env = malloc(sizeof(char *) * (count + 2));
 	if (!new_env)
 	{
@@ -128,7 +48,7 @@ static int	export_one(char ***envp, char *arg)
 	return (add_new_entry(envp, new_entry));
 }
 
-int ft_export(t_cmd *cmd, char ***envp)
+int	ft_export(t_cmd *cmd, char ***envp)
 {
 	int	i;
 	int	ret;

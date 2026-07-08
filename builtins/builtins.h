@@ -13,4 +13,11 @@ int		ft_unset(t_cmd *cmd, char ***envp);
 int		ft_env(char **envp);
 int		ft_exit(t_cmd *cmd);
 
+/* builtins/ft_export_utils.c */
+int		export_key_len(char *arg);
+int		key_match(char *env, char *arg);
+int		export_env_count(char **envp);
+char	*shell_strdup(char *s);
+char	*build_entry(char *arg);
+
 #endif

@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-int ft_echo(t_cmd *cmd)
+int	ft_echo(t_cmd *cmd)
 {
-	int i ;
-	int new_line;
+	int	i;
+	int	new_line;
 
 	i = 1;
 	new_line = 1;

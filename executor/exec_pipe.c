@@ -12,11 +12,11 @@ static int	status_to_code(int status)
 
 void	exec_pipe(t_node *node, char ***envp)
 {
-	int pipefd[2];
-	pid_t pid1;
-	pid_t pid2;
-	pid_t old_pgrp;
-	int status;
+	int		pipefd[2];
+	pid_t	pid1;
+	pid_t	pid2;
+	pid_t	old_pgrp;
+	int		status;
 
 	if (pipe(pipefd) == -1)
 	{

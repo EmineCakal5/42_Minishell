@@ -38,11 +38,11 @@ static int	env_count(char **envp)
  silinecek anahtarı bulur ve 
 o elemanı diziden çıkartıp diziyi tekrar birleştirir.*/
 
-int ft_unset(t_cmd *cmd, char ***envp)
+int	ft_unset(t_cmd *cmd, char ***envp)
 {
-	int i;
-	int j;
-	char **new_env;
+	int		i;
+	int		j;
+	char	**new_env;
 
 	if (!cmd->args[1])
 		return (0);

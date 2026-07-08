@@ -6,9 +6,9 @@
 //Ne yapıyor? envp çift pointer'ı (char envp) 
 //bir liste gibi gezerek her bir satırı terminale yazdırıyor.
 
-int ft_env(char **envp)
+int	ft_env(char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!envp)

@@ -54,9 +54,9 @@ static void	print_exit_error(char *arg)
 //Ne yapıyor? 
 //exit() sistem çağrısını tetikler. cmd->args[1] kontrolü ile kullanıcının belirttiği kodu, yoksa mevcut g_exit_status değerini kullanır.
 
-int ft_exit(t_cmd *cmd)
+int	ft_exit(t_cmd *cmd)
 {
-	int code;
+	int	code;
 
 	write(1, "exit\n", 5);
 	if (cmd->args[1] && cmd->args[2])

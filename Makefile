@@ -7,27 +7,38 @@ SRCS    = main.c \
           tokenizer/token_helper.c \
           tokenizer/token_control.c \
           parser/parser.c \
+          parser/parser_cmd.c \
+          parser/parser_debug.c \
           parser/parser_redir.c \
+          parser/parser_pipe.c \
           parser/parser_utils.c \
           expand/expand.c \
-          expand/expand_utils.c \
+          expand/expand_value.c \
+          expand/expand_env.c \
+          expand/expand_append.c \
           utils/utils.c \
           utils/free.c \
             executor/executor.c \
             executor/exec_cmd.c \
+            executor/exec_path.c \
+            executor/exec_path_utils.c \
          executor/exec_pipe.c \
            executor/exec_redir.c \
            executor/exec_heredoc.c \
+           executor/exec_heredoc_io.c \
            signals/signals.c \
+           signals/signals_heredoc.c \
+           signals/signals_term.c \
                builtins/builtins.c \
                builtins/ft_pwd.c \
                builtins/ft_env.c \
                builtins/ft_exit.c \
                builtins/ft_export.c \
+               builtins/ft_export_utils.c \
                builtins/ft_unset.c \
                builtins/ft_cd.c  \
-               builtins/ft_echo.c 
-          
+               builtins/ft_echo.c
+
 
 OBJS    = $(SRCS:.c=.o)
 

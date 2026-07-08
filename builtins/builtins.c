@@ -10,7 +10,7 @@ static int	str_equal(char *left, char *right)
 	return (left[i] == right[i]);
 }
 
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -22,7 +22,7 @@ int is_builtin(char *cmd)
 	return (0);
 }
 
-int run_builtin(t_cmd *cmd, char ***envp)
+int	run_builtin(t_cmd *cmd, char ***envp)
 {
 	(void)envp;
 

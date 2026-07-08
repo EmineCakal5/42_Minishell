@@ -1,9 +1,9 @@
 #include "../minishell.h"
 #include "executor.h"
 
-int apply_redirections(t_redir *redir)
+int	apply_redirections(t_redir *redir)
 {
-	int fd;
+	int	fd;
 
 	while (redir)
 	{

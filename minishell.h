@@ -47,7 +47,7 @@ typedef struct s_redir
 	t_type			type;
 	char			*target;
 	struct s_redir	*next;
-} 	t_redir;
+}	t_redir;
 
 typedef struct s_cmd
 {
