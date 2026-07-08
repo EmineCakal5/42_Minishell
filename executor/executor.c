@@ -6,7 +6,6 @@ int	execute(t_node *node, char ***envp)
 {
 	if (!node)
 		return (0);
-
 	if (node->type == LEAF_PIPE)
 	{
 		exec_pipe(node, envp);

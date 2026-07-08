@@ -75,8 +75,6 @@ int	main(int ac, char **av, char **envp)
 	if (!shell_env)
 		return (1);
 	setup_signals();
-
-
 	while (1)
 	{
 		line = readline("minishell> ");
@@ -90,13 +88,12 @@ int	main(int ac, char **av, char **envp)
 		tokens = tokenize(line);
 		free(line);
 		if (!tokens)
-			continue;
+			continue ;
 		have_expand(tokens, shell_env);
 		ast = parse(tokens);
 		if (!ast)
 			continue ;
 		g_exit_status = execute(ast, &shell_env);
-
 		free_ast(ast);
 	}
 	free_env(shell_env);

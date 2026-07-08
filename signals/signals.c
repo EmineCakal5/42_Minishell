@@ -19,6 +19,7 @@ static void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
+
 void	setup_signals(void)
 {
 	set_handler(SIGINT, handle_sigint, SA_RESTART);
@@ -31,5 +32,4 @@ void	setup_signals_child(void)
 {
 	set_handler(SIGINT, SIG_DFL, 0);
 	set_handler(SIGQUIT, SIG_DFL, 0);
-
 }

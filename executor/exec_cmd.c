@@ -107,8 +107,6 @@ int	exec_cmd(t_cmd *cmd, char ***envp)
 		free(cmd_path);
 		exit(126);
 	}
-	/* Komutu kendi process group'una tasiyip terminali ona devrediyoruz,
-	   boylece Ctrl+C sadece o gruba gider, shell'in kendisi etkilenmez. */
 	setpgid(pid, pid);
 	set_terminal_pgrp(pid);
 	if (waitpid(pid, &status, 0) == -1)

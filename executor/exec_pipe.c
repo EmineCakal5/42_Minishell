@@ -42,7 +42,6 @@ void	exec_pipe(t_node *node, char ***envp)
 		return ;
 	}
 	setpgid(pid1, pid1);
-
 	pid2 = fork();
 	if (pid2 == 0)
 	{
@@ -61,11 +60,8 @@ void	exec_pipe(t_node *node, char ***envp)
 		return ;
 	}
 	setpgid(pid2, pid1);
-
 	close(pipefd[0]);
 	close(pipefd[1]);
-	/* Boru hattini tek bir process group'a topluyoruz ve terminali ona
-	   veriyoruz, boylece Ctrl+C shell'e degil pipeline'a gider. */
 	set_terminal_pgrp(pid1);
 	waitpid(pid1, NULL, 0);
 	if (waitpid(pid2, &status, 0) == -1)
@@ -76,5 +72,4 @@ void	exec_pipe(t_node *node, char ***envp)
 	}
 	set_terminal_pgrp(old_pgrp);
 	g_exit_status = status_to_code(status);
-
 }

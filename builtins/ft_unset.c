@@ -48,11 +48,9 @@ int	ft_unset(t_cmd *cmd, char ***envp)
 		return (0);
 	if (!envp || !*envp)
 		return (0);
-
 	new_env = malloc(sizeof(char *) * (env_count(*envp) + 1));
 	if (!new_env)
 		return (1);
-
 	i = 0;
 	j = 0;
 	while ((*envp)[i])

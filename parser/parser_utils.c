@@ -2,7 +2,7 @@
 
 int	is_redirection(int type)
 {
-	return (type == REDIR_IN || type == REDIR_OUT 
+	return (type == REDIR_IN || type == REDIR_OUT
 		|| type == APPEND || type == HEREDOC);
 }
 
@@ -23,7 +23,8 @@ int	check_parser(t_token *t)
 		else if (is_redirection(temp->type))
 		{
 			if (temp->next == NULL || temp->next->type != WORD)
-				return (printf("minishell: syntax error near redirection\n"), 1);
+				return (printf(
+						"minishell: syntax error near redirection\n"), 1);
 		}
 		temp = temp->next;
 	}
@@ -62,4 +63,3 @@ t_cmd	*create_cmd(void)
 	cmd->next = NULL;
 	return (cmd);
 }
-

@@ -1,10 +1,11 @@
 #include "../minishell.h"
 
-//pwd komutu, getcwd sistem çağrısını kullanarak mevcut çalışma dizinini ekrana yazar.
+//pwd komutu, getcwd sistem çağrısını kullanarak mevcut çalışma dizinini
+//ekrana yazar.
 
 int	ft_pwd(void)
 {
-	char	cwd[1024]; //dizin yolunu tutacak buffer
+	char	cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{

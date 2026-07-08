@@ -13,7 +13,6 @@ void	have_expand(t_token *t, char **envp)
 			temp = temp->next;
 			continue ;
 		}
-		/* Heredoc delimiter'ı normal kelime gibi genişletmiyoruz. */
 		if (temp->prev && temp->prev->type == HEREDOC)
 		{
 			temp = temp->next;

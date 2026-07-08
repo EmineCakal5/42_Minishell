@@ -74,27 +74,27 @@ void	print_tokens(t_token *head)
 int	main(void)
 {
 	t_token	*tokens;
-	char	input1[] = "echo hello world";
-	char	input2[] = "cat file.txt | grep test";
-	char	input3[] = "ls -la > output.txt";
+	char	*input1;
+	char	*input2;
+	char	*input3;
 
+	input1 = "echo hello world";
+	input2 = "cat file.txt | grep test";
+	input3 = "ls -la > output.txt";
 	printf("========== TEST 1 ==========\n");
 	printf("Input: %s\n\n", input1);
 	tokens = tokenize(input1);
 	print_tokens(tokens);
 	free_tokens(tokens);
-
 	printf("\n========== TEST 2 ==========\n");
 	printf("Input: %s\n\n", input2);
 	tokens = tokenize(input2);
 	print_tokens(tokens);
 	free_tokens(tokens);
-
 	printf("\n========== TEST 3 ==========\n");
 	printf("Input: %s\n\n", input3);
 	tokens = tokenize(input3);
 	print_tokens(tokens);
 	free_tokens(tokens);
-
 	return (0);
 }

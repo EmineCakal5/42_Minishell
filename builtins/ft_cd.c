@@ -28,14 +28,14 @@ static void	update_pwd_env(char ***envp, char *new_path)
 	i = 0;
 	new_entry = ft_strjoin("PWD=", new_path);
 	if (!new_entry)
-		return;
+		return ;
 	while ((*envp)[i])
 	{
 		if (strncmp((*envp)[i], "PWD=", 4) == 0)
 		{
 			free((*envp)[i]);
 			(*envp)[i] = new_entry;
-			return;
+			return ;
 		}
 		i++;
 	}
@@ -48,7 +48,6 @@ int	ft_cd(t_cmd *cmd, char ***envp)
 	char	*path;
 
 	path = cmd->args[1];
-
 	if (!path)
 	{
 		path = shell_getenv(*envp, "HOME");

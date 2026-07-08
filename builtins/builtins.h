@@ -1,7 +1,6 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-
 int		is_builtin(char *cmd);
 int		run_builtin(t_cmd *cmd, char ***envp);
 

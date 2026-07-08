@@ -31,8 +31,8 @@ int	double_token(char *str, int i)
 {
 	if (op(str[i]) && op(str[i + 1]))
 	{
-		if (!((str[i] == '<' && str[i + 1] == '<') ||
-				(str[i] == '>' && str[i + 1] == '>')))
+		if (!((str[i] == '<' && str[i + 1] == '<')
+				|| (str[i] == '>' && str[i + 1] == '>')))
 		{
 			return (syntax_error());
 		}

@@ -10,8 +10,7 @@ typedef struct s_cmd	t_cmd;
 typedef struct s_redir	t_redir;
 /* utils/utils.c */
 char	*ft_substr(const char *s, unsigned int start, size_t len);
-int	ft_atoi(const char *str);
-
+int		ft_atoi(const char *str);
 
 /* utils/free.c */
 void	free_tokens(t_token *head);

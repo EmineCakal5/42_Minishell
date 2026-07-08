@@ -11,12 +11,13 @@ static char	*dup_empty_string(void)
 	return (empty);
 }
 
-static int	append_plain_chunk(char **res, char *value, int *i, char stop_a, char stop_b)
+static int	append_plain_chunk(char **res, char *value, int *i)
 {
 	int	start;
 
 	start = *i;
-	while (value[*i] && value[*i] != '$' && value[*i] != stop_a && value[*i] != stop_b)
+	while (value[*i] && value[*i] != '$' && value[*i] != '\''
+		&& value[*i] != '"')
 		(*i)++;
 	if (*i > start && append_range_to_res(res, value, start, *i - start))
 		return (1);
@@ -30,7 +31,6 @@ static int	append_expansion(char **res, char *value, int *i, char **envp)
 	char	*num;
 	int		start;
 
-	/* $? shell'in son durum kodunu verir. */
 	if (value[*i + 1] == '?')
 	{
 		num = int_to_string(g_exit_status);
@@ -177,7 +177,7 @@ char	*expand_value(char *value, char **envp)
 		}
 		else
 		{
-			if (append_plain_chunk(&res, value, &i, '\'', '"'))
+			if (append_plain_chunk(&res, value, &i))
 				return (free(res), NULL);
 		}
 	}

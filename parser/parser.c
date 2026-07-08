@@ -2,7 +2,8 @@
 
 int	is_op(t_type type)
 {
-	return (type == PIPE || type == REDIR_IN || type == REDIR_OUT || type == APPEND || type == HEREDOC);
+	return (type == PIPE || type == REDIR_IN || type == REDIR_OUT
+		|| type == APPEND || type == HEREDOC);
 }
 
 static t_node	*check_pipe_children(t_node *node)

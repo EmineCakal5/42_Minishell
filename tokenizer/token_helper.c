@@ -34,7 +34,8 @@ int	op(char a)
 
 int	op_number(char *str, int i)
 {
-	if ((str[i] == '<' && str[i + 1] == '<') || (str[i] == '>' && str[i + 1] == '>'))
+	if ((str[i] == '<' && str[i + 1] == '<')
+		|| (str[i] == '>' && str[i + 1] == '>'))
 		return (2);
 	if (str[i] == '<' || str[i] == '>' || str[i] == '|')
 		return (1);

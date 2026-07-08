@@ -14,10 +14,10 @@ int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
-	if (str_equal(cmd, "pwd") || str_equal(cmd, "echo") ||
-		str_equal(cmd, "cd") || str_equal(cmd, "env") ||
-		str_equal(cmd, "export") || str_equal(cmd, "unset") ||
-		str_equal(cmd, "exit"))
+	if (str_equal(cmd, "pwd") || str_equal(cmd, "echo")
+		|| str_equal(cmd, "cd") || str_equal(cmd, "env")
+		|| str_equal(cmd, "export") || str_equal(cmd, "unset")
+		|| str_equal(cmd, "exit"))
 		return (1);
 	return (0);
 }
@@ -25,7 +25,6 @@ int	is_builtin(char *cmd)
 int	run_builtin(t_cmd *cmd, char ***envp)
 {
 	(void)envp;
-
 	if (str_equal(cmd->args[0], "pwd"))
 		return (ft_pwd());
 	if (str_equal(cmd->args[0], "env"))

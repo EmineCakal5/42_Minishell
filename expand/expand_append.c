@@ -6,8 +6,14 @@ char	*append_str_simple(char *dst, const char *src)
 	size_t	src_len;
 	char	*tmp;
 
-	old_len = dst ? strlen(dst) : 0;
-	src_len = src ? strlen(src) : 0;
+	if (dst)
+		old_len = strlen(dst);
+	else
+		old_len = 0;
+	if (src)
+		src_len = strlen(src);
+	else
+		src_len = 0;
 	tmp = realloc(dst, old_len + src_len + 1);
 	if (!tmp)
 		return (NULL);
@@ -22,7 +28,10 @@ char	*append_substr_simple(char *dst, const char *src, int start, int len)
 	size_t	old_len;
 	char	*tmp;
 
-	old_len = dst ? strlen(dst) : 0;
+	if (dst)
+		old_len = strlen(dst);
+	else
+		old_len = 0;
 	tmp = realloc(dst, old_len + len + 1);
 	if (!tmp)
 		return (NULL);
