@@ -1,6 +1,5 @@
 NAME    = minishell
 
-# ── mevcut dosyalar ─────────────────────────────
 SRCS    = main.c \
           tokenizer/token.c \
           tokenizer/token_make.c \
