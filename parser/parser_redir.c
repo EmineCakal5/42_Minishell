@@ -26,7 +26,6 @@ t_redir	*new_redir(t_type type, char *target)
 	return (redir);
 }
 
-/* Liste sırasını koruyarak sona ekliyoruz. */
 void	add_redir(t_redir **head, t_redir *new)
 {
 	if (!new)
@@ -39,7 +38,6 @@ void	add_redir(t_redir **head, t_redir *new)
 	redir_tail(*head)->next = new;
 }
 
-/* Token'dan target'ı alıp cmd içindeki redir listesine yazarız. */
 int	save_redirection(t_cmd *cmd, t_token *redir_token)
 {
 	t_redir	*redir;

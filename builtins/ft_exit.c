@@ -49,11 +49,6 @@ static void	print_exit_error(char *arg)
 	write(2, arg, ft_strlen(arg));
 	write(2, ": numeric argument required\n", 28);
 }
-//Neden kullanıyoruz?
-//Kullanıcının shell'den düzgün bir şekilde ayrılmasını sağlamak zorunludur.
-//Ne yapıyor?
-//exit() sistem çağrısını tetikler. cmd->args[1] kontrolü ile kullanıcının
-//belirttiği kodu, yoksa mevcut g_exit_status değerini kullanır.
 
 int	ft_exit(t_cmd *cmd)
 {

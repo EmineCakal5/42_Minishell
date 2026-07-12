@@ -1,10 +1,6 @@
 #ifndef TYPES_H
 # define TYPES_H
 
-/* ─────────────────────────────────────────────
-   ENUMS
-   ───────────────────────────────────────────── */
-
 typedef enum e_type
 {
 	WORD,
@@ -20,10 +16,6 @@ typedef enum e_node_type
 	LEAD_CMD,
 	LEAF_PIPE
 }	t_node_type;
-
-/* ─────────────────────────────────────────────
-   STRUCTS
-   ───────────────────────────────────────────── */
 
 typedef struct s_redir
 {

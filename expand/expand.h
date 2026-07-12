@@ -1,28 +1,22 @@
 #ifndef EXPAND_H
 # define EXPAND_H
 
-/* expand/expand.c */
 void	have_expand(t_token *t, char **envp);
 
-/* expand/expand_value.c */
 char	*expand_value(char *value, char **envp);
 int		append_char_step(char **res, char *value, int *i);
 int		append_plain_chunk(char **res, char *value, int *i);
 
-/* expand/expand_quote.c */
 int		in_single(char **res, char *value, int *ctx);
 int		in_double(char **res, char *value, int *ctx, char **envp);
 int		in_unquoted(char **res, char *value, int *ctx, char **envp);
 
-/* expand/expand_dollar.c */
 int		append_expansion(char **res, char *value, int *i, char **envp);
 
-/* expand/expand_env.c */
 char	*env_value(char **envp, char *name);
 char	*int_to_string(int value);
 char	*get_var_name(char *value, int *i);
 
-/* expand/expand_append.c */
 char	*append_str_simple(char *dst, const char *src);
 char	*append_substr_simple(char *dst, const char *src, int start, int len);
 int		append_to_res(char **res, const char *src);

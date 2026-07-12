@@ -1,7 +1,6 @@
 #include "../minishell.h"
 #include "executor.h"
 
-//AST'yi dolaşan ana fonk.
 int	execute(t_node *node, char ***envp)
 {
 	if (!node)

@@ -34,10 +34,6 @@ static int	env_count(char **envp)
 	return (count);
 }
 
-/*unset komutu, envp dizisini tarar,
- silinecek anahtarı bulur ve 
-o elemanı diziden çıkartıp diziyi tekrar birleştirir.*/
-
 int	ft_unset(t_cmd *cmd, char ***envp)
 {
 	int		i;
