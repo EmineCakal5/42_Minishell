@@ -15,12 +15,13 @@ t_redir	*new_redir(t_type type, char *target)
 	if (!redir)
 		return (NULL);
 	redir->type = type;
-	redir->target = strdup(target);
+	redir->target = ft_strdup(target);
 	if (!redir->target)
 	{
 		free(redir);
 		return (NULL);
 	}
+	redir->hd_path = NULL;
 	redir->next = NULL;
 	return (redir);
 }

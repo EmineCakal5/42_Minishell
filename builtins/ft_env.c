@@ -15,7 +15,8 @@ int	ft_env(char **envp)
 		return (0);
 	while (envp[i])
 	{
-		printf("%s\n", envp[i]);
+		write(1, envp[i], ft_strlen(envp[i]));
+		write(1, "\n", 1);
 		i++;
 	}
 	return (0);

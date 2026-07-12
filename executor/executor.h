@@ -10,9 +10,11 @@ typedef struct s_redir	t_redir;
 
 int		execute(t_node *node, char ***envp);
 int		exec_cmd(t_cmd *cmd, char ***envp);
+int		run_builtin_with_redirs(t_cmd *cmd, char ***envp);
 void	exec_pipe(t_node *node, char ***envp);
 int		apply_redirections(t_redir *redir);
-int		open_heredoc(char *delimiter);
+int		open_heredoc(char *delimiter, char *path);
+int		prepare_heredocs(t_node *node);
 
 /* executor/exec_path.c */
 char	*find_cmd_path(char *cmd, char **envp);

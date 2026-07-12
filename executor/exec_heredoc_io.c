@@ -35,8 +35,6 @@ int	build_heredoc_name(char *path, size_t size)
 		path[index] = "/tmp/heredoc_"[index];
 		index++;
 	}
-	index = append_number(path, index, (unsigned long)getpid());
-	path[index++] = '_';
 	counter++;
 	index = append_number(path, index, counter);
 	path[index] = '\0';
@@ -46,27 +44,29 @@ int	build_heredoc_name(char *path, size_t size)
 static char	*grow_buf(char *buf, size_t old_cap, size_t new_cap)
 {
 	char	*new_buf;
-	size_t	i;
 
 	new_buf = malloc(new_cap);
 	if (!new_buf)
-	{
-		free(buf);
-		return (NULL);
-	}
-	i = 0;
-	while (i < old_cap)
-	{
-		new_buf[i] = buf[i];
-		i++;
-	}
+		return (free(buf), NULL);
+	ft_memcpy(new_buf, buf, old_cap);
 	free(buf);
 	return (new_buf);
 }
 
-//readline yerine ham read() kullanıyoruz: Ctrl+C ile kesilince
-//(SA_RESTART olmadan) EINTR net biçimde yakalanabiliyor, readline'ın
-//iç durumuna bağlı belirsizlikler (karakter kaybı vb.) ortadan kalkıyor
+static int	push_char(char **buf, size_t *cap, size_t *len, char c)
+{
+	if (*len + 1 >= *cap)
+	{
+		*buf = grow_buf(*buf, *cap, *cap * 2);
+		if (!*buf)
+			return (1);
+		*cap *= 2;
+	}
+	(*buf)[*len] = c;
+	(*len)++;
+	return (0);
+}
+
 char	*read_heredoc_line(void)
 {
 	char	*buf;
@@ -81,27 +81,15 @@ char	*read_heredoc_line(void)
 	if (!buf)
 		return (NULL);
 	write(STDOUT_FILENO, "> ", 2);
-	while (1)
+	r = read(STDIN_FILENO, &c, 1);
+	while (r > 0 && c != '\n')
 	{
-		r = read(STDIN_FILENO, &c, 1);
-		if (r <= 0)
-		{
-			if (len > 0)
-				break ;
-			free(buf);
+		if (push_char(&buf, &cap, &len, c))
 			return (NULL);
-		}
-		if (c == '\n')
-			break ;
-		if (len + 1 >= cap)
-		{
-			buf = grow_buf(buf, cap, cap * 2);
-			if (!buf)
-				return (NULL);
-			cap *= 2;
-		}
-		buf[len++] = c;
+		r = read(STDIN_FILENO, &c, 1);
 	}
+	if (r <= 0 && len == 0)
+		return (free(buf), NULL);
 	buf[len] = '\0';
 	return (buf);
 }

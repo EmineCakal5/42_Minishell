@@ -20,41 +20,45 @@ char	*env_value(char **envp, char *name)
 	return (NULL);
 }
 
-char	*int_to_string(int value)
+static int	num_len(long nbr, int sign)
 {
-	char	buffer[12];
-	int		len;
-	long	nbr;
-	int		sign;
-	char	*res;
-	int		i;
+	int	len;
 
-	nbr = value;
-	sign = 0;
-	len = 0;
-	if (nbr < 0)
-	{
-		sign = 1;
-		nbr = -nbr;
-	}
 	if (nbr == 0)
-		buffer[len++] = '0';
+		return (1 + sign);
+	len = sign;
 	while (nbr > 0)
 	{
-		buffer[len++] = (char)('0' + (nbr % 10));
+		len++;
 		nbr /= 10;
 	}
-	res = malloc(len + sign + 1);
+	return (len);
+}
+
+char	*int_to_string(int value)
+{
+	char	*res;
+	long	nbr;
+	int		len;
+	int		sign;
+
+	nbr = value;
+	sign = (value < 0);
+	if (nbr < 0)
+		nbr = -nbr;
+	len = num_len(nbr, sign);
+	res = malloc(len + 1);
 	if (!res)
 		return (NULL);
-	res[len + sign] = '\0';
+	res[len] = '\0';
 	if (sign)
 		res[0] = '-';
-	i = 0;
-	while (i < len)
+	if (nbr == 0)
+		res[sign] = '0';
+	while (nbr > 0)
 	{
-		res[i + sign] = buffer[len - 1 - i];
-		i++;
+		res[--len] = '0' + (nbr % 10);
+		nbr /= 10;
 	}
 	return (res);
 }
@@ -65,7 +69,8 @@ char	*get_var_name(char *value, int *i)
 
 	(*i)++;
 	start = *i;
-	while (value[*i] && (isalnum((unsigned char)value[*i]) || value[*i] == '_'))
+	while (value[*i] && (ft_isalnum((unsigned char)value[*i])
+			|| value[*i] == '_'))
 		(*i)++;
 	return (ft_substr(value, start, *i - start));
 }

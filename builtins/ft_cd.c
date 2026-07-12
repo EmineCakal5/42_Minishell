@@ -31,7 +31,7 @@ static void	update_pwd_env(char ***envp, char *new_path)
 		return ;
 	while ((*envp)[i])
 	{
-		if (strncmp((*envp)[i], "PWD=", 4) == 0)
+		if (ft_strncmp((*envp)[i], "PWD=", 4) == 0)
 		{
 			free((*envp)[i]);
 			(*envp)[i] = new_entry;

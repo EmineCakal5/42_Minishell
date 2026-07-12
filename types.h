@@ -29,6 +29,7 @@ typedef struct s_redir
 {
 	t_type			type;
 	char			*target;
+	char			*hd_path;
 	struct s_redir	*next;
 }	t_redir;
 

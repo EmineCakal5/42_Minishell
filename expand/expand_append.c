@@ -7,18 +7,18 @@ char	*append_str_simple(char *dst, const char *src)
 	char	*tmp;
 
 	if (dst)
-		old_len = strlen(dst);
+		old_len = ft_strlen(dst);
 	else
 		old_len = 0;
 	if (src)
-		src_len = strlen(src);
+		src_len = ft_strlen(src);
 	else
 		src_len = 0;
-	tmp = realloc(dst, old_len + src_len + 1);
+	tmp = ft_realloc(dst, old_len, old_len + src_len + 1);
 	if (!tmp)
 		return (NULL);
 	if (src_len > 0)
-		memcpy(tmp + old_len, src, src_len);
+		ft_memcpy(tmp + old_len, src, src_len);
 	tmp[old_len + src_len] = '\0';
 	return (tmp);
 }
@@ -29,14 +29,14 @@ char	*append_substr_simple(char *dst, const char *src, int start, int len)
 	char	*tmp;
 
 	if (dst)
-		old_len = strlen(dst);
+		old_len = ft_strlen(dst);
 	else
 		old_len = 0;
-	tmp = realloc(dst, old_len + len + 1);
+	tmp = ft_realloc(dst, old_len, old_len + len + 1);
 	if (!tmp)
 		return (NULL);
 	if (len > 0)
-		memcpy(tmp + old_len, src + start, len);
+		ft_memcpy(tmp + old_len, src + start, len);
 	tmp[old_len + len] = '\0';
 	return (tmp);
 }

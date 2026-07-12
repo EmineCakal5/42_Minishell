@@ -24,12 +24,16 @@ void	setup_signals(void)
 {
 	set_handler(SIGINT, handle_sigint, SA_RESTART);
 	set_handler(SIGQUIT, SIG_IGN, 0);
-	set_handler(SIGTTOU, SIG_IGN, 0);
-	set_handler(SIGTTIN, SIG_IGN, 0);
 }
 
 void	setup_signals_child(void)
 {
 	set_handler(SIGINT, SIG_DFL, 0);
 	set_handler(SIGQUIT, SIG_DFL, 0);
+}
+
+void	ignore_signals(void)
+{
+	set_handler(SIGINT, SIG_IGN, 0);
+	set_handler(SIGQUIT, SIG_IGN, 0);
 }

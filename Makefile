@@ -14,30 +14,37 @@ SRCS    = main.c \
           parser/parser_utils.c \
           expand/expand.c \
           expand/expand_value.c \
+          expand/expand_quote.c \
+          expand/expand_dollar.c \
           expand/expand_env.c \
           expand/expand_append.c \
           utils/utils.c \
           utils/free.c \
-            executor/executor.c \
-            executor/exec_cmd.c \
-            executor/exec_path.c \
-            executor/exec_path_utils.c \
-         executor/exec_pipe.c \
-           executor/exec_redir.c \
-           executor/exec_heredoc.c \
-           executor/exec_heredoc_io.c \
-           signals/signals.c \
-           signals/signals_heredoc.c \
-           signals/signals_term.c \
-               builtins/builtins.c \
-               builtins/ft_pwd.c \
-               builtins/ft_env.c \
-               builtins/ft_exit.c \
-               builtins/ft_export.c \
-               builtins/ft_export_utils.c \
-               builtins/ft_unset.c \
-               builtins/ft_cd.c  \
-               builtins/ft_echo.c
+          utils/env_utils.c \
+          utils/ft_string.c \
+          utils/ft_mem.c \
+          utils/ft_char.c \
+          executor/executor.c \
+          executor/exec_cmd.c \
+          executor/exec_builtin.c \
+          executor/exec_path.c \
+          executor/exec_path_utils.c \
+          executor/exec_pipe.c \
+          executor/exec_redir.c \
+          executor/exec_heredoc.c \
+          executor/exec_heredoc_prep.c \
+          executor/exec_heredoc_io.c \
+          signals/signals.c \
+          signals/signals_heredoc.c \
+          builtins/builtins.c \
+          builtins/ft_pwd.c \
+          builtins/ft_env.c \
+          builtins/ft_exit.c \
+          builtins/ft_export.c \
+          builtins/ft_export_utils.c \
+          builtins/ft_unset.c \
+          builtins/ft_cd.c \
+          builtins/ft_echo.c
 
 
 OBJS    = $(SRCS:.c=.o)

@@ -8,6 +8,11 @@ void	free_redirs(t_redir *redir)
 	{
 		tmp = redir;
 		redir = redir->next;
+		if (tmp->hd_path)
+		{
+			unlink(tmp->hd_path);
+			free(tmp->hd_path);
+		}
 		free(tmp->target);
 		free(tmp);
 	}

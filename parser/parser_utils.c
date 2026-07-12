@@ -16,15 +16,15 @@ int	check_parser(t_token *t)
 		if (temp->type == PIPE)
 		{
 			if (temp->prev == NULL || temp->next == NULL)
-				return (printf("minishell: syntax error near pipe\n"), 1);
+				return (write(2, "minishell: syntax error near pipe\n", 34), 1);
 			if (is_op(temp->prev->type) || is_op(temp->next->type))
-				return (printf("minishell: syntax error near pipe\n"), 1);
+				return (write(2, "minishell: syntax error near pipe\n", 34), 1);
 		}
 		else if (is_redirection(temp->type))
 		{
 			if (temp->next == NULL || temp->next->type != WORD)
-				return (printf(
-						"minishell: syntax error near redirection\n"), 1);
+				return (write(2,
+						"minishell: syntax error near redirection\n", 41), 1);
 		}
 		temp = temp->next;
 	}

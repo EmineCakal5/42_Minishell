@@ -12,7 +12,7 @@ static int	add_arg(t_cmd *cmd, t_token *t, int *i)
 {
 	if (!(t->prev && is_redirection(t->prev->type)))
 	{
-		cmd->args[*i] = strdup(t->value);
+		cmd->args[*i] = ft_strdup(t->value);
 		if (!cmd->args[*i])
 			return (1);
 		(*i)++;
@@ -85,7 +85,7 @@ t_node	*create_node_cmd(t_token *t)
 	if (!node)
 		return (NULL);
 	count = argc_counter(t);
-	cmd->args = calloc(count + 1, sizeof(char *));
+	cmd->args = ft_calloc(count + 1, sizeof(char *));
 	if (!cmd->args)
 		return (cmd_fail(node, cmd, start));
 	if (fill_cmd_args(cmd, t))

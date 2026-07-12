@@ -22,36 +22,60 @@ char	*join_path(char *left, char *right)
 	size_t	left_len;
 	size_t	right_len;
 
-	left_len = strlen(left);
-	right_len = strlen(right);
+	left_len = ft_strlen(left);
+	right_len = ft_strlen(right);
 	full_path = malloc(left_len + right_len + 2);
 	if (!full_path)
 		return (NULL);
-	memcpy(full_path, left, left_len);
+	ft_memcpy(full_path, left, left_len);
 	full_path[left_len] = '/';
-	memcpy(full_path + left_len + 1, right, right_len);
+	ft_memcpy(full_path + left_len + 1, right, right_len);
 	full_path[left_len + right_len + 1] = '\0';
 	return (full_path);
+}
+
+static int	count_colons(char *s)
+{
+	int	count;
+	int	i;
+
+	count = 1;
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == ':')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+static char	*dup_range(char *s, int start, int end)
+{
+	char	*out;
+	int		i;
+
+	out = malloc(end - start + 1);
+	if (!out)
+		return (NULL);
+	i = 0;
+	while (start + i < end)
+	{
+		out[i] = s[start + i];
+		i++;
+	}
+	out[i] = '\0';
+	return (out);
 }
 
 char	**split_path_dirs(char *path_line)
 {
 	char	**paths;
-	int		count;
 	int		i;
 	int		start;
 	int		index;
-	int		len;
 
-	count = 1;
-	i = 0;
-	while (path_line[i])
-	{
-		if (path_line[i] == ':')
-			count++;
-		i++;
-	}
-	paths = calloc(count + 1, sizeof(char *));
+	paths = ft_calloc(count_colons(path_line) + 1, sizeof(char *));
 	if (!paths)
 		return (NULL);
 	start = 0;
@@ -61,16 +85,9 @@ char	**split_path_dirs(char *path_line)
 	{
 		if (path_line[i] == ':' || path_line[i] == '\0')
 		{
-			len = i - start;
-			paths[index] = malloc(len + 1);
-			if (!paths[index])
-			{
-				free_path_list(paths);
-				return (NULL);
-			}
-			memcpy(paths[index], path_line + start, len);
-			paths[index][len] = '\0';
-			index++;
+			paths[index] = dup_range(path_line, start, i);
+			if (!paths[index++])
+				return (free_path_list(paths), NULL);
 			if (path_line[i] == '\0')
 				break ;
 			start = i + 1;

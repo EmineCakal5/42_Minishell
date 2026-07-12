@@ -11,7 +11,7 @@ static char	**get_path_dirs(char **envp)
 		return (NULL);
 	while (envp[i])
 	{
-		if (!strncmp(envp[i], "PATH=", 5))
+		if (!ft_strncmp(envp[i], "PATH=", 5))
 		{
 			path_line = envp[i] + 5;
 			return (split_path_dirs(path_line));
@@ -57,10 +57,10 @@ char	*find_cmd_path(char *cmd, char **envp)
 
 	if (!cmd || !cmd[0])
 		return (NULL);
-	if (strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
-			return (strdup(cmd));
+			return (ft_strdup(cmd));
 		return (NULL);
 	}
 	paths = get_path_dirs(envp);
