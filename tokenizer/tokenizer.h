@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkutlu <zkutlu@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/13 04:07:47 by zkutlu            #+#    #+#             */
+/*   Updated: 2026/07/13 04:07:48 by zkutlu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef TOKENIZER_H
 # define TOKENIZER_H
 
@@ -5,7 +17,7 @@ t_token	*new_token(t_type type, char *value);
 void	add_token(t_token **head, t_token *new);
 int		word_quote_state(char *value);
 char	*read_word(char *s, int *i);
-t_token	*tokenize(char *s);
+t_token	*tokenize(char *s, t_shell *sh);
 
 int		handle_op_token(char *s, int *i, t_token **head);
 int		handle_word_token(char *s, int *i, t_token **head);
