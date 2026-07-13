@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   types.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkutlu <zkutlu@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/13 04:08:48 by zkutlu            #+#    #+#             */
+/*   Updated: 2026/07/13 04:08:49 by zkutlu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef TYPES_H
 # define TYPES_H
 
@@ -17,11 +29,18 @@ typedef enum e_node_type
 	LEAF_PIPE
 }	t_node_type;
 
+typedef struct s_shell
+{
+	char	**env;
+	int		status;
+}	t_shell;
+
 typedef struct s_redir
 {
 	t_type			type;
 	char			*target;
 	char			*hd_path;
+	int				expand;
 	struct s_redir	*next;
 }	t_redir;
 

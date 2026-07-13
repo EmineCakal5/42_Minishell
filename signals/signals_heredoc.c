@@ -16,7 +16,6 @@
 static void	handle_sigint_heredoc(int sig)
 {
 	(void)sig;
-	g_exit_status = 130;
 	write(1, "\n", 1);
 }
 

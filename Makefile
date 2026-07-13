@@ -17,7 +17,10 @@ SRCS    = main.c \
           expand/expand_dollar.c \
           expand/expand_env.c \
           expand/expand_append.c \
+          expand/expand_heredoc.c \
+          expand/expand_split.c \
           utils/utils.c \
+          utils/input.c \
           utils/free.c \
           utils/env_utils.c \
           utils/ft_string.c \
@@ -25,6 +28,7 @@ SRCS    = main.c \
           utils/ft_char.c \
           executor/executor.c \
           executor/exec_cmd.c \
+          executor/exec_error.c \
           executor/exec_builtin.c \
           executor/exec_path.c \
           executor/exec_path_utils.c \
@@ -36,6 +40,7 @@ SRCS    = main.c \
           signals/signals.c \
           signals/signals_heredoc.c \
           builtins/builtins.c \
+          builtins/builtins_utils.c \
           builtins/ft_pwd.c \
           builtins/ft_env.c \
           builtins/ft_exit.c \

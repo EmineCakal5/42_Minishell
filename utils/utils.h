@@ -43,4 +43,6 @@ void	free_redirs(t_redir *redir);
 
 char	**copy_env(char **envp);
 void	free_env(char **envp);
+
+char	*read_input_line(void);
 #endif
