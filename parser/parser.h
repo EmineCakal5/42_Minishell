@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkutlu <zkutlu@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/13 04:06:32 by zkutlu            #+#    #+#             */
+/*   Updated: 2026/07/13 04:06:33 by zkutlu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSER_H
 # define PARSER_H
 
-t_node	*parse(t_token *t);
+t_node	*parse(t_token *t, t_shell *sh);
 int		is_op(t_type type);
 
 t_node	*create_node_cmd(t_token *t);

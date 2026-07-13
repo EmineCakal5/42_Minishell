@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkutlu <zkutlu@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/13 04:06:27 by zkutlu            #+#    #+#             */
+/*   Updated: 2026/07/13 04:06:28 by zkutlu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	is_op(t_type type)
@@ -45,12 +57,13 @@ static t_node	*parse_rec(t_token *t)
 	return (check_pipe_children(node));
 }
 
-t_node	*parse(t_token *t)
+t_node	*parse(t_token *t, t_shell *sh)
 {
 	if (!t)
 		return (NULL);
 	if (check_parser(t))
 	{
+		sh->status = 2;
 		free_tokens(t);
 		return (NULL);
 	}

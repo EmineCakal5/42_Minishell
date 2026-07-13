@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_redir.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkutlu <zkutlu@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/13 04:07:25 by zkutlu            #+#    #+#             */
+/*   Updated: 2026/07/13 04:07:26 by zkutlu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_redir	*redir_tail(t_redir *head)
@@ -22,6 +34,7 @@ t_redir	*new_redir(t_type type, char *target)
 		return (NULL);
 	}
 	redir->hd_path = NULL;
+	redir->expand = 1;
 	redir->next = NULL;
 	return (redir);
 }
@@ -51,8 +64,13 @@ int	save_redirection(t_cmd *cmd, t_token *redir_token)
 	redir = new_redir(redir_token->type, target->value);
 	if (!redir)
 		return (1);
-	add_redir(&cmd->redirs, redir);
 	if (redir_token->type == HEREDOC)
+	{
+		free(redir->target);
+		redir->target = strip_quotes(target->value);
+		redir->expand = !target->quoted;
 		cmd->heredoc_fd = -1;
+	}
+	add_redir(&cmd->redirs, redir);
 	return (0);
 }
