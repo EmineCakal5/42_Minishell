@@ -12,6 +12,18 @@
 
 #include "../minishell.h"
 #include "executor.h"
+#include <sys/stat.h>
+
+static int	is_executable_file(char *path)
+{
+	struct stat	st;
+
+	if (access(path, X_OK) != 0)
+		return (0);
+	if (stat(path, &st) != 0)
+		return (0);
+	return (!S_ISDIR(st.st_mode));
+}
 
 static char	**get_path_dirs(char **envp)
 {
@@ -54,7 +66,7 @@ static char	*find_cmd_in_path(char **paths, char *cmd)
 		full_path = join_cmd_path(paths[i], cmd);
 		if (!full_path)
 			return (NULL);
-		if (access(full_path, X_OK) == 0)
+		if (is_executable_file(full_path))
 			return (full_path);
 		free(full_path);
 		i++;
@@ -71,7 +83,7 @@ char	*find_cmd_path(char *cmd, char **envp)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, X_OK) == 0)
+		if (is_executable_file(cmd))
 			return (ft_strdup(cmd));
 		return (NULL);
 	}

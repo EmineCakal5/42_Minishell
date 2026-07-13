@@ -13,18 +13,13 @@
 #include "../minishell.h"
 #include "executor.h"
 
-int	execute(t_node *node, char ***envp)
+int	execute(t_node *node, t_shell *sh)
 {
 	if (!node)
 		return (0);
 	if (node->type == LEAF_PIPE)
-	{
-		exec_pipe(node, envp);
-		return (g_exit_status);
-	}
+		return (exec_pipe(node, sh));
 	else if (node->type == LEAD_CMD)
-	{
-		return (exec_cmd(node->cmd, envp));
-	}
+		return (exec_cmd(node->cmd, sh));
 	return (0);
 }

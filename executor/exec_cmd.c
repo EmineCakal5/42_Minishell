@@ -28,22 +28,18 @@ static int	status_to_code(int status)
 	return (1);
 }
 
-static void	child_exec(t_cmd *cmd, char *cmd_path, char ***envp)
+static void	child_exec(t_cmd *cmd, char *cmd_path, char **envp)
 {
 	setup_signals_child();
 	if (apply_redirections(cmd->redirs) == -1)
-	{
-		if (g_exit_status == 130)
-			exit(130);
 		exit(1);
-	}
-	execve(cmd_path, cmd->args, *envp);
+	execve(cmd_path, cmd->args, envp);
 	perror("execve");
 	free(cmd_path);
 	exit(126);
 }
 
-static int	fork_and_exec(t_cmd *cmd, char *cmd_path, char ***envp)
+static int	fork_and_exec(t_cmd *cmd, char *cmd_path, char **envp)
 {
 	pid_t	pid;
 	int		status;
@@ -65,21 +61,20 @@ static int	fork_and_exec(t_cmd *cmd, char *cmd_path, char ***envp)
 	return (status_to_code(status));
 }
 
-int	exec_cmd(t_cmd *cmd, char ***envp)
+int	exec_cmd(t_cmd *cmd, t_shell *sh)
 {
 	char	*cmd_path;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
-		return (0);
-	if (is_builtin(cmd->args[0]))
-		return (run_builtin_with_redirs(cmd, envp));
-	cmd_path = find_cmd_path(cmd->args[0], *envp);
-	if (!cmd_path)
 	{
-		write(2, "minishell: ", 11);
-		write(2, cmd->args[0], ft_strlen(cmd->args[0]));
-		write(2, ": command not found\n", 20);
-		return (127);
+		if (cmd && cmd->redirs)
+			return (run_redirs_only(cmd));
+		return (0);
 	}
-	return (fork_and_exec(cmd, cmd_path, envp));
+	if (is_builtin(cmd->args[0]))
+		return (run_builtin_with_redirs(cmd, sh));
+	cmd_path = find_cmd_path(cmd->args[0], sh->env);
+	if (!cmd_path)
+		return (command_error(cmd->args[0]));
+	return (fork_and_exec(cmd, cmd_path, sh->env));
 }

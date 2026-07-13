@@ -79,20 +79,21 @@ static int	push_char(char **buf, size_t *cap, size_t *len, char c)
 	return (0);
 }
 
-char	*read_heredoc_line(void)
+char	*read_heredoc_line(int *cancelled)
 {
 	char	*buf;
 	size_t	cap;
 	size_t	len;
 	char	c;
-	ssize_t	r;
+	int		r;
 
 	cap = 128;
 	len = 0;
 	buf = malloc(cap);
 	if (!buf)
 		return (NULL);
-	write(STDOUT_FILENO, "> ", 2);
+	if (isatty(STDIN_FILENO))
+		write(STDOUT_FILENO, "> ", 2);
 	r = read(STDIN_FILENO, &c, 1);
 	while (r > 0 && c != '\n')
 	{
@@ -100,8 +101,5 @@ char	*read_heredoc_line(void)
 			return (NULL);
 		r = read(STDIN_FILENO, &c, 1);
 	}
-	if (r <= 0 && len == 0)
-		return (free(buf), NULL);
-	buf[len] = '\0';
-	return (buf);
+	return (heredoc_finalize(buf, len, r, cancelled));
 }

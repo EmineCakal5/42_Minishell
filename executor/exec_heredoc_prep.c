@@ -25,43 +25,50 @@ static char	*make_heredoc_path(void)
 	return (path);
 }
 
-static int	prep_cmd_heredocs(t_cmd *cmd)
+static int	prep_one_heredoc(t_redir *redir, t_shell *sh)
 {
-	t_redir	*redir;
 	char	*path;
 	int		r;
+
+	path = make_heredoc_path();
+	if (!path)
+		return (sh->status = 1, -1);
+	r = open_heredoc(redir, path, sh);
+	if (r == -1)
+		sh->status = 1;
+	else if (r == -2)
+		sh->status = 130;
+	if (r < 0)
+		return (unlink(path), free(path), -1);
+	redir->hd_path = path;
+	return (0);
+}
+
+static int	prep_cmd_heredocs(t_cmd *cmd, t_shell *sh)
+{
+	t_redir	*redir;
 
 	if (!cmd)
 		return (0);
 	redir = cmd->redirs;
 	while (redir)
 	{
-		if (redir->type == HEREDOC)
-		{
-			path = make_heredoc_path();
-			if (!path)
-				return (g_exit_status = 1, -1);
-			r = open_heredoc(redir->target, path);
-			if (r == -1)
-				g_exit_status = 1;
-			if (r < 0)
-				return (unlink(path), free(path), -1);
-			redir->hd_path = path;
-		}
+		if (redir->type == HEREDOC && prep_one_heredoc(redir, sh) == -1)
+			return (-1);
 		redir = redir->next;
 	}
 	return (0);
 }
 
-int	prepare_heredocs(t_node *node)
+int	prepare_heredocs(t_node *node, t_shell *sh)
 {
 	if (!node)
 		return (0);
-	if (prepare_heredocs(node->left) == -1)
+	if (prepare_heredocs(node->left, sh) == -1)
 		return (-1);
-	if (prepare_heredocs(node->right) == -1)
+	if (prepare_heredocs(node->right, sh) == -1)
 		return (-1);
 	if (node->type == LEAD_CMD)
-		return (prep_cmd_heredocs(node->cmd));
+		return (prep_cmd_heredocs(node->cmd, sh));
 	return (0);
 }

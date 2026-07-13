@@ -42,7 +42,21 @@ static void	restore_std_fds(int std_fds[2])
 	}
 }
 
-int	run_builtin_with_redirs(t_cmd *cmd, char ***envp)
+int	run_redirs_only(t_cmd *cmd)
+{
+	int	std_fds[2];
+	int	status;
+
+	if (save_std_fds(std_fds) == -1)
+		return (1);
+	status = 0;
+	if (apply_redirections(cmd->redirs) == -1)
+		status = 1;
+	restore_std_fds(std_fds);
+	return (status);
+}
+
+int	run_builtin_with_redirs(t_cmd *cmd, t_shell *sh)
 {
 	int	std_fds[2];
 	int	status;
@@ -56,12 +70,10 @@ int	run_builtin_with_redirs(t_cmd *cmd, char ***envp)
 		if (apply_redirections(cmd->redirs) == -1)
 		{
 			restore_std_fds(std_fds);
-			if (g_exit_status == 130)
-				return (130);
 			return (1);
 		}
 	}
-	status = run_builtin(cmd, envp);
+	status = run_builtin(cmd, sh);
 	if (cmd->redirs)
 		restore_std_fds(std_fds);
 	return (status);
