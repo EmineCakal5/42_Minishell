@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_quote.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkutlu <zkutlu@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/13 04:08:22 by zkutlu            #+#    #+#             */
+/*   Updated: 2026/07/13 04:08:23 by zkutlu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int	put_and_step(char **res, char c, int *i, int step)
@@ -36,7 +48,7 @@ int	in_single(char **res, char *value, int *ctx)
 	return (append_char_step(res, value, &ctx[0]));
 }
 
-int	in_double(char **res, char *value, int *ctx, char **envp)
+int	in_double(char **res, char *value, int *ctx, t_exp *e)
 {
 	if (value[ctx[0]] == '"')
 	{
@@ -45,13 +57,16 @@ int	in_double(char **res, char *value, int *ctx, char **envp)
 		return (0);
 	}
 	if (value[ctx[0]] == '$')
-		return (append_expansion(res, value, &ctx[0], envp));
+	{
+		e->split = 0;
+		return (append_expansion(res, value, &ctx[0], e));
+	}
 	if (value[ctx[0]] == '\\')
 		return (append_backslash(res, value, &ctx[0], '"'));
 	return (append_char_step(res, value, &ctx[0]));
 }
 
-int	in_unquoted(char **res, char *value, int *ctx, char **envp)
+int	in_unquoted(char **res, char *value, int *ctx, t_exp *e)
 {
 	if (value[ctx[0]] == '\\')
 		return (append_backslash(res, value, &ctx[0], 0));
@@ -62,6 +77,9 @@ int	in_unquoted(char **res, char *value, int *ctx, char **envp)
 		return (0);
 	}
 	if (value[ctx[0]] == '$')
-		return (append_expansion(res, value, &ctx[0], envp));
+	{
+		e->split = 1;
+		return (append_expansion(res, value, &ctx[0], e));
+	}
 	return (append_plain_chunk(res, value, &ctx[0]));
 }
