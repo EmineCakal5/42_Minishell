@@ -60,23 +60,25 @@ static int	export_one(char ***envp, char *arg)
 	return (add_new_entry(envp, new_entry));
 }
 
-int	ft_export(t_cmd *cmd, char ***envp)
+int	ft_export(t_cmd *cmd, t_shell *sh)
 {
 	int	i;
 	int	ret;
 
 	i = 1;
 	ret = 0;
-	if (!envp || !*envp)
+	if (!sh->env)
 		return (0);
 	if (!cmd->args[1])
 	{
-		ft_env(*envp);
+		ft_env(sh->env);
 		return (0);
 	}
 	while (cmd->args[i])
 	{
-		if (export_one(envp, cmd->args[i]) != 0)
+		if (!is_valid_identifier(cmd->args[i]))
+			ret = identifier_error("export", cmd->args[i]);
+		else if (export_one(&sh->env, cmd->args[i]) != 0)
 			ret = 1;
 		i++;
 	}

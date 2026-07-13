@@ -34,22 +34,21 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	run_builtin(t_cmd *cmd, char ***envp)
+int	run_builtin(t_cmd *cmd, t_shell *sh)
 {
-	(void)envp;
 	if (str_equal(cmd->args[0], "pwd"))
 		return (ft_pwd());
 	if (str_equal(cmd->args[0], "env"))
-		return (ft_env(*envp));
+		return (ft_env(sh->env));
 	if (str_equal(cmd->args[0], "exit"))
-		return (ft_exit(cmd));
+		return (ft_exit(cmd, sh));
 	if (str_equal(cmd->args[0], "export"))
-		return (ft_export(cmd, envp));
+		return (ft_export(cmd, sh));
 	if (str_equal(cmd->args[0], "unset"))
-		return (ft_unset(cmd, envp));
+		return (ft_unset(cmd, sh));
 	if (str_equal(cmd->args[0], "echo"))
 		return (ft_echo(cmd));
 	if (str_equal(cmd->args[0], "cd"))
-		return (ft_cd(cmd, envp));
+		return (ft_cd(cmd, sh));
 	return (0);
 }

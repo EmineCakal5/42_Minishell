@@ -62,26 +62,24 @@ static void	print_exit_error(char *arg)
 	write(2, ": numeric argument required\n", 28);
 }
 
-int	ft_exit(t_cmd *cmd)
+int	ft_exit(t_cmd *cmd, t_shell *sh)
 {
 	int	code;
 
-	write(1, "exit\n", 5);
-	if (cmd->args[1] && cmd->args[2])
+	if (isatty(STDIN_FILENO))
+		write(1, "exit\n", 5);
+	if (!cmd->args[1])
+		exit(sh->status);
+	if (!is_numeric_arg(cmd->args[1]))
 	{
-		write(2, "minishell: exit: too many arguments\n", 35);
-		g_exit_status = 1;
+		print_exit_error(cmd->args[1]);
+		exit(2);
+	}
+	if (cmd->args[2])
+	{
+		write(2, "minishell: exit: too many arguments\n", 36);
 		return (1);
 	}
-	if (cmd->args[1])
-	{
-		if (!is_numeric_arg(cmd->args[1]))
-		{
-			print_exit_error(cmd->args[1]);
-			exit(2);
-		}
-		code = exit_code(cmd->args[1]);
-		exit((unsigned char)code);
-	}
-	exit(g_exit_status);
+	code = exit_code(cmd->args[1]);
+	exit((unsigned char)code);
 }

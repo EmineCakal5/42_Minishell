@@ -46,24 +46,20 @@ static int	env_count(char **envp)
 	return (count);
 }
 
-int	ft_unset(t_cmd *cmd, char ***envp)
+static void	unset_one(char ***envp, char *arg)
 {
 	int		i;
 	int		j;
 	char	**new_env;
 
-	if (!cmd->args[1])
-		return (0);
-	if (!envp || !*envp)
-		return (0);
 	new_env = malloc(sizeof(char *) * (env_count(*envp) + 1));
 	if (!new_env)
-		return (1);
+		return ;
 	i = 0;
 	j = 0;
 	while ((*envp)[i])
 	{
-		if (!same_key((*envp)[i], cmd->args[1]))
+		if (!same_key((*envp)[i], arg))
 			new_env[j++] = (*envp)[i];
 		else
 			free((*envp)[i]);
@@ -72,5 +68,19 @@ int	ft_unset(t_cmd *cmd, char ***envp)
 	new_env[j] = NULL;
 	free(*envp);
 	*envp = new_env;
+}
+
+int	ft_unset(t_cmd *cmd, t_shell *sh)
+{
+	int	i;
+
+	if (!sh->env)
+		return (0);
+	i = 1;
+	while (cmd->args[i])
+	{
+		unset_one(&sh->env, cmd->args[i]);
+		i++;
+	}
 	return (0);
 }

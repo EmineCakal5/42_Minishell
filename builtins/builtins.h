@@ -14,20 +14,23 @@
 # define BUILTINS_H
 
 int		is_builtin(char *cmd);
-int		run_builtin(t_cmd *cmd, char ***envp);
+int		run_builtin(t_cmd *cmd, t_shell *sh);
 
 int		ft_echo(t_cmd *cmd);
-int		ft_cd(t_cmd *cmd, char ***envp);
+int		ft_cd(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(void);
-int		ft_export(t_cmd *cmd, char ***envp);
-int		ft_unset(t_cmd *cmd, char ***envp);
+int		ft_export(t_cmd *cmd, t_shell *sh);
+int		ft_unset(t_cmd *cmd, t_shell *sh);
 int		ft_env(char **envp);
-int		ft_exit(t_cmd *cmd);
+int		ft_exit(t_cmd *cmd, t_shell *sh);
 
 int		export_key_len(char *arg);
 int		key_match(char *env, char *arg);
 int		export_env_count(char **envp);
 char	*shell_strdup(char *s);
 char	*build_entry(char *arg);
+
+int		is_valid_identifier(char *arg);
+int		identifier_error(char *builtin, char *arg);
 
 #endif
